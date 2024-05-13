@@ -1,0 +1,54 @@
+#Compiler settings
+CC = g++
+CFLAGS = -g -Wall -Werror -std=c++17
+LDFLAGS = 
+
+#Directories
+SRCDIR = src/file-system
+OBJDIR = obj
+BINDIR = bin
+CONDIR = src/containers
+
+#Create executable file
+$(BINDIR)/filesystem: $(OBJDIR)/main.o $(OBJDIR)/file_system.o $(OBJDIR)/fs_helpers.o $(OBJDIR)/entry.o $(OBJDIR)/entry_helpers.o $(OBJDIR)/disk_interface.o $(OBJDIR)/helpers.o $(OBJDIR)/string.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+#Create Main object file
+$(OBJDIR)/main.o: $(SRCDIR)/main.c++ $(SRCDIR)/file_system/file_system.h $(CONDIR)/vector.h
+	$(CC) $(CFLAGS) -I$(SRCDIR) -c $< -o $@
+
+#Create FileSystem object file
+$(OBJDIR)/file_system.o: $(SRCDIR)/file_system/file_system.c++ $(SRCDIR)/file_system/file_system.h  $(CONDIR)/vector.h
+	$(CC) $(CFLAGS) -I$(SRCDIR) -c $< -o $@
+
+#Create FileSystem Helpers object file
+$(OBJDIR)/fs_helpers.o: $(SRCDIR)/file_system/fs_helpers.c++ $(SRCDIR)/file_system/file_system.h $(CONDIR)/vector.h
+	$(CC) $(CFLAGS) -I$(SRCDIR) -c $< -o $@
+
+#Create FileSystem Entry object file
+$(OBJDIR)/entry.o: $(SRCDIR)/file_system/entry.c++ $(SRCDIR)/file_system/file_system.h $(CONDIR)/vector.h
+	$(CC) $(CFLAGS) -I$(SRCDIR) -c $< -o $@
+
+#Create FileSystem Entry Helpers object file
+$(OBJDIR)/entry_helpers.o: $(SRCDIR)/file_system/entry_helpers.c++ $(SRCDIR)/file_system/file_system.h $(CONDIR)/vector.h
+	$(CC) $(CFLAGS) -I$(SRCDIR) -c $< -o $@
+
+#Create DiskInterface object file
+$(OBJDIR)/disk_interface.o: $(SRCDIR)/disk_interface/disk_interface.c++ $(SRCDIR)/disk_interface/disk_interface.h
+	$(CC) $(CFLAGS) -I$(SRCDIR) -c $< -o $@
+
+#Create Helpers object file
+$(OBJDIR)/helpers.o: $(SRCDIR)/helpers.c++ $(SRCDIR)/main.h
+	$(CC) $(CFLAGS) -I$(SRCDIR) -c $< -o $@
+
+#Create String object file
+$(OBJDIR)/string.o: $(CONDIR)/string.c++ $(CONDIR)/string.h
+	$(CC) $(CFLAGS) -I$(SRCDIR) -c $< -o $@
+
+#Remove all execuable and object files
+clean:
+	rm -f $(OBJDIR)/*.o $(BINDIR)/filesystem
+
+#Run Main execuable file
+exec: $(BINDIR)/filesystem
+	$(BINDIR)/filesystem
